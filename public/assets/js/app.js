@@ -73,6 +73,7 @@ const projectsData = [
       { name: 'HMAC Webhooks', why: 'Confirms successful bank transfers automatically behind the scenes.' },
       { name: 'Tailwind CSS', why: 'Makes product cards and checkout forms clean and comfortable on mobile.' }
     ],
+    image: 'assets/images/projects/shopverse.png',
     liveUrl: 'https://shopverse-fast.vercel.app/',
     featured: true,
     year: '2025',
