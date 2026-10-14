@@ -33,6 +33,7 @@ const projectsData = [
       { name: 'Lucide Icons', why: 'Provides clear visual cues for drinks, food categories, and dietary tags.' },
       { name: 'Vercel Edge', why: 'Keeps the site online 24/7 with zero maintenance downtime.' }
     ],
+    image: 'assets/images/projects/menucraft.png',
     liveUrl: 'https://menucraft-eta.vercel.app/',
     featured: true,
     year: '2025',
@@ -111,6 +112,7 @@ const projectsData = [
       { name: 'Render Cloud Platform', why: 'Provides reliable hosting so the portal stays responsive during high traffic.' },
       { name: 'Bootstrap & CSS', why: 'Ensures tables and charts are easy to read for observers and election staff.' }
     ],
+    image: 'assets/images/projects/bincom-election.png',
     liveUrl: 'https://bincom-election-portal.onrender.com/',
     featured: true,
     year: '2025',
@@ -150,6 +152,7 @@ const projectsData = [
       { name: 'Lucide Icons', why: 'Provides intuitive visual navigation for different medical departments.' },
       { name: 'Vercel Cloud', why: 'Ensures instantaneous page loading with zero server delays.' }
     ],
+    image: 'assets/images/projects/premed-portal.png',
     liveUrl: 'https://premed-test-portal.vercel.app/login.php',
     featured: true,
     year: '2025',
@@ -188,6 +191,7 @@ const projectsData = [
       { name: 'Bootstrap 5', why: 'Ensures high accessibility standards and consistent button styling.' },
       { name: 'Netlify Cloud', why: 'Provides fast global hosting with automatic SSL security.' }
     ],
+    image: 'assets/images/projects/secure-bank.png',
     liveUrl: 'https://emmanuelsecurebank2025.netlify.app/',
     featured: true,
     year: '2025',
@@ -226,6 +230,7 @@ const projectsData = [
       { name: 'Bootstrap 5', why: 'Provides a clean, easy-to-read table structure that adapts to phone screens.' },
       { name: 'Netlify Edge', why: 'Loads images and product cards rapidly across all internet connections.' }
     ],
+    image: 'assets/images/projects/techphone-pro.png',
     liveUrl: 'https://techphonepro20255.netlify.app/',
     featured: true,
     year: '2025',
@@ -584,6 +589,18 @@ function initModals() {
     if (problemEl) problemEl.textContent = project.theProblem;
     if (solutionEl) solutionEl.textContent = project.theSolution;
     if (urlText) urlText.textContent = project.liveUrl.replace('https://', '');
+
+    // Real screenshot banner
+    const imageBox = document.getElementById('modal-project-image-box');
+    const imageEl = document.getElementById('modal-project-image');
+    if (imageBox && imageEl) {
+      if (project.image) {
+        imageEl.src = project.image;
+        imageBox.classList.remove('hidden');
+      } else {
+        imageBox.classList.add('hidden');
+      }
+    }
 
     // Metrics
     const m1 = document.getElementById('modal-metric-1');
