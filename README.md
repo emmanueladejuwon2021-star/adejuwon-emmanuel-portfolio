@@ -110,6 +110,7 @@ The codebase is fully optimized for **Vercel**, **Netlify**, and static CDNs:
 
 **Adejuwon Emmanuel**
 - Website: [adejuwonemmanuel.vercel.app](https://adejuwonemmanuel.vercel.app)
-- GitHub: [@adejuwon](https://github.com/adejuwon)
+- GitHub: [@emmanueladejuwon2021-star](https://github.com/emmanueladejuwon2021-star)
 - LinkedIn: [Adejuwon Emmanuel](https://linkedin.com/in/adejuwon)
-- Email: [adejuwon.emmanuel@email.com](mailto:adejuwon.emmanuel@email.com)
+- Email: [emmanueladejuwon2021@gmail.com](mailto:emmanueladejuwon2021@gmail.com)
+- WhatsApp: [+234 916 015 5524](https://wa.me/2349160155524)

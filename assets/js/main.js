@@ -715,7 +715,7 @@ function initCommandPalette() {
     { title: 'PhoneProSale — Vite Tech Store', subtitle: 'Explore scintillating-tanuki-c13572.netlify.app', action: () => window.openProjectModal('phone-pro-sale'), icon: 'shopping-bag' },
     { title: 'View Full Resume / CV', subtitle: 'Open interactive resume viewer', action: () => window.openResumeModal(), icon: 'file-text' },
     { title: 'Toggle Dark / Light Theme', subtitle: 'Switch current visual appearance', action: () => document.querySelector('.theme-toggle-btn')?.click(), icon: 'sun-moon' },
-    { title: 'Copy Email Address', subtitle: 'adejuwon.emmanuel@email.com', action: () => copyEmail(), icon: 'copy' },
+    { title: 'Copy Email Address', subtitle: 'emmanueladejuwon2021@gmail.com', action: () => copyEmail(), icon: 'copy' },
     { title: 'Contact Emmanuel', subtitle: 'Jump to inquiry form', action: () => window.location.hash = '#contact', icon: 'mail' }
   ];
 
@@ -914,14 +914,14 @@ export function showToast(message, type = 'success', duration = 3500) {
 // --------------------------------------------------------------------------
 function initClipboardHelpers() {
   window.copyEmail = () => {
-    const email = 'adejuwon.emmanuel@email.com';
+    const email = 'emmanueladejuwon2021@gmail.com';
     navigator.clipboard.writeText(email).then(() => {
       showToast(`Copied ${email} to clipboard!`, 'success');
     });
   };
 
   window.copyPhone = () => {
-    const phone = '+234 812 345 6789';
+    const phone = '+234 916 015 5524';
     navigator.clipboard.writeText(phone).then(() => {
       showToast(`Copied ${phone} to clipboard!`, 'success');
     });
