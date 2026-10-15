@@ -4,8 +4,48 @@
 // Jargon-free & Problem-Solving Focused
 // ==========================================================================
 
-// 1. Projects Data Definition (All 7 live production apps)
+// 1. Projects Data Definition (All 8 live production apps)
 const projectsData = [
+  {
+    id: 'fashionhub',
+    title: 'StyleHub — Luxury Fashion & Haute Couture Atelier',
+    category: 'E-Commerce',
+    tagline: 'High-end luxury fashion atelier with runway carousel, live vault countdown timer, and interactive Lookbook hotspots.',
+    shortDesc: 'A production-grade luxury fashion boutique engineered with dynamic runway slides, live drops vault countdown, Shop The Look hotspots, currency switching, and instant shopping bag.',
+    fullDesc: 'StyleHub (FashionHub) is a responsive haute couture and luxury streetwear digital storefront. It combines editorial magazine layouts with high-speed performance: featuring a dynamic hero carousel with runway video preview, a live vault timer for exclusive limited drops, interactive "Shop The Look" spotlight pins, multi-currency conversion (USD/EUR/GBP/NGN), and an interactive shopping cart.',
+    theProblem: 'Luxury fashion and designer apparel require sophisticated, high-end visual storytelling with smooth interactions, but traditional fashion ecommerce templates are often clunky, slow, broken on mobile screens, and disconnected from dynamic customer engagement.',
+    theSolution: 'Emmanuel engineered a bespoke, high-performance atelier experience featuring fluid responsive layouts, interactive hotspots on lookbook models, real-time drop countdowns, and a responsive shopping bag that works effortlessly across desktop, tablet, and mobile browsers.',
+    realWorldImpact: [
+      'Editorial Visuals: Ultra-crisp runway carousels and luxury aesthetic matching Milan and Paris fashion houses.',
+      'Interactive Hotspots: Shoppers click directly on clothing items worn by models to buy each piece.',
+      '100% Responsive: Perfectly fitted and compact on mobile phones without horizontal scrolling or broken elements.'
+    ],
+    features: [
+      'Dynamic Runway Carousel: Hero slides with high-res imagery, sound toggle, and modal lookbook preview.',
+      'Live Vault Drop Countdown: Real-time ticker counting down hours, minutes, and seconds to limited edition drops.',
+      'Interactive Shop The Look: Visual hotspots on runway models that reveal item details and prices upon click.',
+      'Multi-Currency Switcher: Instant pricing conversion across USD, EUR, GBP, and NGN.',
+      'Slide-Out Shopping Bag: Reactive cart with quantity updates, promo code engine, and persistent storage.'
+    ],
+    plainTech: [
+      { name: 'Vue 3 & Modern JS', why: 'Powers smooth reactive state, modal previews, and cart drawer calculations.' },
+      { name: 'Tailwind CSS & Bootstrap', why: 'Guarantees flawless compact responsive layouts on all mobile viewports.' },
+      { name: 'Lucide Icons', why: 'Clean vector iconography complementing luxury editorial aesthetics.' },
+      { name: 'Netlify Edge', why: 'Global low-latency CDN hosting ensuring fast image and page loading worldwide.' }
+    ],
+    image: 'assets/images/projects/fashionhub.png',
+    liveUrl: 'https://fashionhub20255.netlify.app/',
+    featured: true,
+    year: '2025',
+    gradient: 'from-amber-600 via-stone-800 to-black',
+    accentColor: '#d97706',
+    tech: ['Vue 3', 'Bootstrap 5', 'Tailwind CSS', 'Responsive UI', 'Netlify'],
+    stats: {
+      metric1: 'Live Netlify Deploy',
+      metric2: '100% Responsive',
+      metric3: '< 1s Load Speed'
+    }
+  },
   {
     id: 'menucraft',
     title: 'MenuCraft — Contactless QR Digital Menu',

@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useInView } from '../hooks/useAnimations';
-import { projects } from '../data/content';
+import { projects, type Project } from '../data/content';
 
 const categories = ['All', ...Array.from(new Set(projects.map(p => p.category)))];
 
@@ -77,79 +77,93 @@ export default function Portfolio() {
   );
 }
 
-function ProjectCard({ project, index, isInView }: { project: typeof import('../data/content').projects[0]; index: number; isInView: boolean }) {
-  return (
+function ProjectCard({ project, index, isInView }: { project: Project; index: number; isInView: boolean }) {
+  const card = (
     <motion.article
       initial={{ opacity: 0, y: 30 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay: 0.1 + index * 0.1 }}
-      className="group relative rounded-2xl overflow-hidden cursor-pointer"
+      className="group relative rounded-2xl overflow-hidden cursor-pointer h-full flex flex-col bg-white dark:bg-white/[0.02] border border-gray-200 dark:border-white/[0.06] hover:border-violet-500/50 dark:hover:border-violet-400/50 transition-all duration-300"
     >
       {/* Project Visual */}
-      <div className={`relative aspect-[4/3] bg-gradient-to-br ${project.gradient} overflow-hidden`}>
-        {/* Pattern overlay */}
-        <div className="absolute inset-0 opacity-30" style={{ backgroundImage: project.pattern, backgroundSize: '20px 20px' }} />
-        
-        {/* Grid overlay */}
-        <div className="absolute inset-0 opacity-[0.06]" style={{
-          backgroundImage: 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)',
-          backgroundSize: '40px 40px',
-        }} />
+      <div className={`relative aspect-[16/10] bg-gradient-to-br ${project.gradient} overflow-hidden`}>
+        {project.image ? (
+          <img
+            src={project.image}
+            alt={project.title}
+            className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
+            loading="lazy"
+          />
+        ) : (
+          <>
+            {/* Pattern overlay */}
+            <div className="absolute inset-0 opacity-30" style={{ backgroundImage: project.pattern, backgroundSize: '20px 20px' }} />
+            
+            {/* Grid overlay */}
+            <div className="absolute inset-0 opacity-[0.06]" style={{
+              backgroundImage: 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)',
+              backgroundSize: '40px 40px',
+            }} />
 
-        {/* Mockup window */}
-        <div className="absolute inset-3 sm:inset-4 md:inset-6 lg:inset-8 rounded-md sm:rounded-lg bg-black/20 backdrop-blur-sm border border-white/10 overflow-hidden group-hover:scale-[1.02] transition-transform duration-500">
-          {/* Window chrome */}
-          <div className="h-5 sm:h-6 md:h-8 bg-black/30 flex items-center px-2 sm:px-3 gap-1 sm:gap-1.5">
-            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white/20" />
-            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white/20" />
-            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white/20" />
-          </div>
-          {/* Content lines */}
-          <div className="p-2 sm:p-3 md:p-4 space-y-1.5 sm:space-y-2">
-            <div className="h-1.5 sm:h-2 w-3/4 bg-white/10 rounded" />
-            <div className="h-1.5 sm:h-2 w-1/2 bg-white/10 rounded" />
-            <div className="h-6 sm:h-8 md:h-12 w-full bg-white/5 rounded mt-2 sm:mt-3" />
-            <div className="grid grid-cols-3 gap-1.5 sm:gap-2 mt-1.5 sm:mt-2">
-              <div className="h-5 sm:h-6 md:h-8 bg-white/5 rounded" />
-              <div className="h-5 sm:h-6 md:h-8 bg-white/5 rounded" />
-              <div className="h-5 sm:h-6 md:h-8 bg-white/5 rounded" />
+            {/* Mockup window */}
+            <div className="absolute inset-3 sm:inset-4 md:inset-6 lg:inset-8 rounded-md sm:rounded-lg bg-black/20 backdrop-blur-sm border border-white/10 overflow-hidden group-hover:scale-[1.02] transition-transform duration-500">
+              {/* Window chrome */}
+              <div className="h-5 sm:h-6 md:h-8 bg-black/30 flex items-center px-2 sm:px-3 gap-1 sm:gap-1.5">
+                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white/20" />
+                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white/20" />
+                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white/20" />
+              </div>
+              {/* Content lines */}
+              <div className="p-2 sm:p-3 md:p-4 space-y-1.5 sm:space-y-2">
+                <div className="h-1.5 sm:h-2 w-3/4 bg-white/10 rounded" />
+                <div className="h-1.5 sm:h-2 w-1/2 bg-white/10 rounded" />
+                <div className="h-6 sm:h-8 md:h-12 w-full bg-white/5 rounded mt-2 sm:mt-3" />
+                <div className="grid grid-cols-3 gap-1.5 sm:gap-2 mt-1.5 sm:mt-2">
+                  <div className="h-5 sm:h-6 md:h-8 bg-white/5 rounded" />
+                  <div className="h-5 sm:h-6 md:h-8 bg-white/5 rounded" />
+                  <div className="h-5 sm:h-6 md:h-8 bg-white/5 rounded" />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </>
+        )}
 
         {/* Hover overlay */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-500 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center">
           <motion.div
             initial={false}
-            className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white text-black text-xs sm:text-sm font-semibold"
+            className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white text-black text-xs sm:text-sm font-semibold shadow-lg flex items-center gap-1.5"
           >
-            View Case Study →
+            <span>{project.link ? 'View Live Site' : 'View Case Study'}</span>
+            <span aria-hidden="true">↗</span>
           </motion.div>
         </div>
 
         {/* Year badge */}
-        <div className="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-4 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-black/30 backdrop-blur-sm text-[9px] sm:text-[10px] md:text-xs text-white/80 font-medium">
+        <div className="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-4 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-black/60 backdrop-blur-md text-[9px] sm:text-[10px] md:text-xs text-white/90 font-medium z-10 border border-white/10">
           {project.year}
         </div>
       </div>
 
       {/* Project Info */}
-      <div className="p-3 sm:p-4 md:p-5 lg:p-6 bg-white dark:bg-white/[0.02] border border-gray-200 dark:border-white/[0.04] border-t-0 rounded-b-xl sm:rounded-b-2xl">
-        <div className="flex items-start justify-between gap-2 sm:gap-3 mb-1.5 sm:mb-2 lg:mb-3">
-          <div className="min-w-0 flex-1">
-            <span className="text-[9px] sm:text-[10px] md:text-xs uppercase tracking-wider text-violet-500 dark:text-violet-400 font-medium">{project.category}</span>
-            <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-gray-900 dark:text-white mt-0.5 sm:mt-1 group-hover:text-violet-600 dark:group-hover:text-violet-300 transition-colors truncate">
-              {project.title}
-            </h3>
+      <div className="p-3 sm:p-4 md:p-5 lg:p-6 flex-1 flex flex-col justify-between">
+        <div>
+          <div className="flex items-start justify-between gap-2 sm:gap-3 mb-1.5 sm:mb-2 lg:mb-3">
+            <div className="min-w-0 flex-1">
+              <span className="text-[9px] sm:text-[10px] md:text-xs uppercase tracking-wider text-violet-500 dark:text-violet-400 font-medium">{project.category}</span>
+              <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-gray-900 dark:text-white mt-0.5 sm:mt-1 group-hover:text-violet-600 dark:group-hover:text-violet-300 transition-colors truncate">
+                {project.title}
+              </h3>
+            </div>
+            <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-gray-400 dark:text-white/30 group-hover:text-violet-500 dark:group-hover:text-violet-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 17L17 7M17 7H7M17 7v10" />
+            </svg>
           </div>
-          <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-gray-300 dark:text-white/20 group-hover:text-gray-500 dark:group-hover:text-white/60 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 17L17 7M17 7H7M17 7v10" />
-          </svg>
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-white/50 leading-relaxed mb-3 sm:mb-4 line-clamp-2">{project.description}</p>
         </div>
-        <p className="text-xs sm:text-sm text-gray-600 dark:text-white/40 leading-relaxed mb-2 sm:mb-3 lg:mb-4 line-clamp-2">{project.description}</p>
         <div className="flex flex-wrap gap-1 sm:gap-1.5 md:gap-2">
           {project.tags.map(tag => (
-            <span key={tag} className="px-1.5 sm:px-2 md:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] md:text-xs bg-gray-100 dark:bg-white/[0.04] text-gray-600 dark:text-white/50 border border-gray-200 dark:border-white/[0.06]">
+            <span key={tag} className="px-1.5 sm:px-2 md:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] md:text-xs bg-gray-100 dark:bg-white/[0.04] text-gray-600 dark:text-white/60 border border-gray-200 dark:border-white/[0.06]">
               {tag}
             </span>
           ))}
@@ -157,4 +171,19 @@ function ProjectCard({ project, index, isInView }: { project: typeof import('../
       </div>
     </motion.article>
   );
+
+  if (project.link) {
+    return (
+      <a
+        href={project.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 rounded-2xl"
+      >
+        {card}
+      </a>
+    );
+  }
+
+  return card;
 }

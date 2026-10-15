@@ -98,7 +98,30 @@ export const experience = [
   },
 ];
 
-export const projects = [
+export interface Project {
+  title: string;
+  category: string;
+  description: string;
+  tags: string[];
+  gradient: string;
+  pattern: string;
+  year: string;
+  image?: string;
+  link?: string;
+}
+
+export const projects: Project[] = [
+  {
+    title: 'StyleHub — Luxury Fashion & Haute Couture',
+    category: 'E-Commerce',
+    description: 'A production-grade luxury fashion atelier featuring dynamic runway slides, live vault drops countdown timer, interactive lookbook spotlights, and responsive shopping cart.',
+    tags: ['Vue 3', 'Bootstrap 5', 'Tailwind CSS', 'Responsive', 'JavaScript'],
+    gradient: 'from-amber-600 via-stone-800 to-black',
+    pattern: 'radial-gradient(circle at 20% 80%, rgba(255,255,255,0.12) 0%, transparent 50%)',
+    year: '2025',
+    image: '/projects/fashionhub.png',
+    link: 'https://fashionhub20255.netlify.app/',
+  },
   {
     title: 'Luxe Commerce',
     category: 'E-Commerce',
