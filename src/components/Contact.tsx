@@ -1,209 +1,275 @@
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
 import { useInView } from '../hooks/useAnimations';
-import { personalInfo, socialLinks } from '../data/content';
+import { personalInfo } from '../data/content';
 
-export default function Contact() {
+interface ContactProps {
+  onShowToast: (msg: string, type?: 'success' | 'info' | 'error') => void;
+}
+
+export default function Contact({ onShowToast }: ContactProps) {
   const { ref, isInView } = useInView(0.05);
-  const [formState, setFormState] = useState({ name: '', email: '', message: '' });
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [subject, setSubject] = useState('Online Store with Card & Bank Payments');
+  const [message, setMessage] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 3000);
-    setFormState({ name: '', email: '', message: '' });
+
+    if (!name.trim() || !email.trim() || !message.trim()) {
+      onShowToast('Please fill out all required fields.', 'error');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      onShowToast('Please enter a valid email address.', 'error');
+      return;
+    }
+
+    const inquiries = JSON.parse(localStorage.getItem('ae-inquiries') || '[]');
+    inquiries.push({ name, email, subject, message, timestamp: new Date().toISOString() });
+    localStorage.setItem('ae-inquiries', JSON.stringify(inquiries));
+
+    onShowToast('Message sent! Emmanuel will reply to your email within 24 hours.', 'success');
+    setName('');
+    setEmail('');
+    setMessage('');
+  };
+
+  const handleSendViaWhatsApp = () => {
+    const text = encodeURIComponent(`Hi Emmanuel,\nMy Name: ${name || 'Client'}\nProject: ${subject}\nDetails: ${message || 'I want to build a website.'}`);
+    window.open(`https://wa.me/${personalInfo.whatsappNumber}?text=${text}`, '_blank');
+  };
+
+  const copyEmail = () => {
+    navigator.clipboard.writeText(personalInfo.email);
+    onShowToast(`Copied ${personalInfo.email} to clipboard!`, 'success');
+  };
+
+  const copyPhone = () => {
+    navigator.clipboard.writeText(personalInfo.phone);
+    onShowToast(`Copied ${personalInfo.phone} to clipboard!`, 'success');
   };
 
   return (
-    <section id="contact" ref={ref} className="relative py-12 sm:py-16 md:py-24 lg:py-32 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/3 w-[500px] h-[500px] bg-violet-600/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 right-1/3 w-[400px] h-[400px] bg-fuchsia-600/5 rounded-full blur-[120px]" />
-      </div>
+    <section id="contact" ref={ref} className="py-20 sm:py-28 border-t border-slate-200 dark:border-white/5 bg-white dark:bg-white/[0.01] relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="mb-8 sm:mb-12 lg:mb-20 text-center"
-        >
-          <div className="flex items-center justify-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-            <div className="w-6 sm:w-8 h-[1px] bg-gradient-to-r from-transparent to-violet-500" />
-            <span className="text-xs sm:text-sm uppercase tracking-[0.2em] text-violet-500 dark:text-violet-400 font-medium">Contact</span>
-            <div className="w-6 sm:w-8 h-[1px] bg-gradient-to-l from-transparent to-violet-500" />
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 mb-3">
+            <span className="w-6 h-[2px] bg-violet-500"></span>
+            <span className="text-xs uppercase tracking-[0.2em] font-mono text-violet-600 dark:text-violet-400 font-bold">Start a Project</span>
+            <span className="w-6 h-[2px] bg-violet-500"></span>
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white tracking-tight">
-            Let's create something<br />
-            <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-amber-300 bg-clip-text text-transparent">remarkable together.</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            Let's Talk About <span className="bg-gradient-to-r from-violet-600 via-fuchsia-600 to-amber-500 bg-clip-text text-transparent">Your Project.</span>
           </h2>
-          <p className="text-sm sm:text-base text-gray-600 dark:text-white/40 mt-3 sm:mt-4 max-w-xl mx-auto">
-            Have a project in mind? I'd love to hear about it. Let's talk about how we can bring your vision to life.
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mt-3">
+            Need an online store, a digital menu, or a website for your company? Send a direct WhatsApp message or drop an email below.
           </p>
-        </motion.div>
+        </div>
 
-        <div className="grid lg:grid-cols-5 gap-6 sm:gap-8 lg:gap-12">
-          {/* Left - Info */}
+        <div className="grid lg:grid-cols-12 gap-10 items-start max-w-5xl mx-auto">
+
+          {/* Left Column - Contact Info */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="lg:col-span-2 space-y-6 sm:space-y-8"
+            transition={{ duration: 0.5 }}
+            className="lg:col-span-5 space-y-4"
           >
-            {/* Contact Details */}
-            <div className="space-y-4">
-              <h3 className="text-xs uppercase tracking-[0.2em] text-gray-500 dark:text-white/40 font-medium">Get in touch</h3>
-              {[
-                { label: 'Email', value: personalInfo.email, icon: '✉' },
-                { label: 'Phone', value: personalInfo.phone, icon: '☎' },
-                { label: 'Location', value: personalInfo.location, icon: '◎' },
-              ].map((item, i) => (
-                <div key={i} className="group flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors">
-                  <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-white/[0.04] border border-gray-200 dark:border-white/[0.06] flex items-center justify-center text-violet-500 dark:text-violet-400 group-hover:border-violet-300 dark:group-hover:border-violet-500/30 transition-colors">
-                    {item.icon}
-                  </div>
-                  <div>
-                    <p className="text-[10px] uppercase tracking-wider text-gray-500 dark:text-white/30">{item.label}</p>
-                    <p className="text-sm sm:text-base text-gray-700 dark:text-white/80 font-medium">{item.value}</p>
-                  </div>
+            {/* WhatsApp Highlight Box */}
+            <a
+              href={personalInfo.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-5 rounded-2xl border-2 border-emerald-500/40 bg-emerald-500/5 hover:bg-emerald-500/10 transition-all flex items-center justify-between group shadow-sm hover:scale-[1.01]"
+            >
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/20 group-hover:scale-110 transition-transform font-bold text-xl">
+                  💬
                 </div>
-              ))}
-            </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-600 dark:text-emerald-400">Direct WhatsApp</span>
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  </div>
+                  <span className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white group-hover:text-emerald-600 transition-colors">
+                    {personalInfo.whatsappDisplay}
+                  </span>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">Click to chat instantly • Fast Response</p>
+                </div>
+              </div>
+              <div className="w-8 h-8 rounded-full bg-emerald-600/10 text-emerald-600 flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                →
+              </div>
+            </a>
 
-            {/* Social */}
-            <div className="space-y-4">
-              <h3 className="text-xs uppercase tracking-[0.2em] text-gray-500 dark:text-white/40 font-medium">Follow along</h3>
-              <div className="grid grid-cols-2 gap-2">
-                {socialLinks.map((social, i) => (
-                  <a
-                    key={i}
-                    href={social.url}
-                    className="group flex items-center gap-3 p-3 rounded-xl border border-gray-200 dark:border-white/[0.06] hover:border-gray-300 dark:hover:border-white/10 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-all"
-                  >
-                    <span className="text-sm text-gray-600 dark:text-white/40 group-hover:text-gray-900 dark:group-hover:text-violet-400 transition-colors">{social.name}</span>
-                    <svg className="w-3 h-3 text-gray-300 dark:text-white/20 group-hover:text-gray-500 dark:group-hover:text-white/60 group-hover:translate-x-0.5 transition-all ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7v10" />
-                    </svg>
+            {/* Direct Email Box */}
+            <div className="p-5 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#0b0c16] shadow-xs flex items-center justify-between group">
+              <div className="flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-xl bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400 flex items-center justify-center font-bold">
+                  ✉
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Direct Email</span>
+                  <a href={`mailto:${personalInfo.email}`} className="block text-xs sm:text-sm font-bold text-slate-900 dark:text-white hover:text-violet-600 transition-colors">
+                    {personalInfo.email}
                   </a>
-                ))}
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={copyEmail}
+                className="p-2 rounded-lg text-slate-400 hover:text-violet-600 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors text-xs font-mono"
+                title="Copy email to clipboard"
+              >
+                Copy
+              </button>
+            </div>
+
+            {/* Phone Call Box */}
+            <div className="p-5 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#0b0c16] shadow-xs flex items-center justify-between group">
+              <div className="flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-xl bg-fuchsia-50 dark:bg-fuchsia-500/10 text-fuchsia-600 dark:text-fuchsia-400 flex items-center justify-center font-bold">
+                  📞
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Call / Mobile</span>
+                  <a href={`tel:${personalInfo.phone}`} className="block text-sm font-bold text-slate-900 dark:text-white hover:text-fuchsia-600 transition-colors">
+                    {personalInfo.phone}
+                  </a>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={copyPhone}
+                className="p-2 rounded-lg text-slate-400 hover:text-fuchsia-600 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors text-xs font-mono"
+                title="Copy phone to clipboard"
+              >
+                Copy
+              </button>
+            </div>
+
+            {/* Social Profiles */}
+            <div className="p-5 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#0b0c16]">
+              <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block mb-3">Online Profiles</span>
+              <div className="grid grid-cols-2 gap-2">
+                <a href={personalInfo.github} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl border border-slate-200 dark:border-white/5 hover:border-violet-500/40 text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
+                  <span>GitHub</span>
+                </a>
+                <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl border border-slate-200 dark:border-white/5 hover:border-violet-500/40 text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
+                  <span>LinkedIn</span>
+                </a>
               </div>
             </div>
 
-            {/* Availability */}
-            <div className="p-5 rounded-xl bg-gradient-to-br from-violet-50 to-fuchsia-50 dark:from-violet-600/10 dark:to-fuchsia-600/10 border border-violet-200 dark:border-violet-500/20">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
-                </span>
-                <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">Currently Available</span>
-              </div>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-white/50">
-                Open for freelance projects and collaborations. Let's build something great.
-              </p>
-            </div>
           </motion.div>
 
-          {/* Right - Form */}
+          {/* Right Column - Form */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="lg:col-span-3"
+            transition={{ duration: 0.5 }}
+            className="lg:col-span-7"
           >
-            <form onSubmit={handleSubmit} className="p-4 sm:p-5 md:p-6 lg:p-8 rounded-xl sm:rounded-2xl border border-gray-200 dark:border-white/[0.06] bg-white dark:bg-white/[0.01] space-y-4 sm:space-y-5 lg:space-y-6">
-              <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 lg:gap-5">
-                <FormField
-                  label="Name"
-                  type="text"
-                  placeholder="Your name"
-                  value={formState.name}
-                  onChange={(v) => setFormState({ ...formState, name: v })}
-                />
-                <FormField
-                  label="Email"
-                  type="email"
-                  placeholder="your@email.com"
-                  value={formState.email}
-                  onChange={(v) => setFormState({ ...formState, email: v })}
-                />
+            <form onSubmit={handleSubmit} className="p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#0b0c16] shadow-xl space-y-4">
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="contact-name" className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                    Your Name <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="contact-name"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="e.g. Samuel Okafor"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="contact-email" className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                    Your Email <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    id="contact-email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="e.g. samuel@business.com"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 transition-all"
+                  />
+                </div>
               </div>
-              <FormField
-                label="Message"
-                type="textarea"
-                placeholder="Tell me about your project..."
-                value={formState.message}
-                onChange={(v) => setFormState({ ...formState, message: v })}
-              />
 
-              <button
-                type="submit"
-                className="group relative w-full py-3.5 sm:py-4 rounded-xl overflow-hidden"
-              >
-                <span className="absolute inset-0 bg-gradient-to-r from-violet-600 to-fuchsia-600 group-hover:from-violet-500 group-hover:to-fuchsia-500 transition-all duration-300" />
-                <span className="absolute inset-0 bg-gradient-to-r from-violet-600 to-fuchsia-600 blur-xl opacity-40 group-hover:opacity-60 transition-opacity" />
-                <span className="relative flex items-center justify-center gap-2 text-white font-medium text-sm sm:text-base">
-                  {isSubmitted ? (
-                    <>
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      Message Sent!
-                    </>
-                  ) : (
-                    <>
-                      Send Message
-                      <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </>
-                  )}
-                </span>
-              </button>
+              <div>
+                <label htmlFor="contact-subject" className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                  What Do You Want to Build?
+                </label>
+                <select
+                  id="contact-subject"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 transition-all"
+                >
+                  <option value="Online Store with Card & Bank Payments">Online Store (with Card & Bank Transfer Payments)</option>
+                  <option value="Digital Restaurant Menu / Booking Website">Digital Restaurant Menu or Booking Website</option>
+                  <option value="Customer Portal / Exam or Voting System">Customer Portal, Exam or Voting Website</option>
+                  <option value="General Website Advice & Redesign">General Website Advice or Refresh Existing Site</option>
+                </select>
+              </div>
 
-              <p className="text-[10px] sm:text-xs text-gray-400 dark:text-white/20 text-center">
-                I typically respond within 24 hours.
+              <div>
+                <label htmlFor="contact-message" className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                  Tell Me About Your Project <span className="text-rose-500">*</span>
+                </label>
+                <textarea
+                  id="contact-message"
+                  rows={3}
+                  required
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Share a short note on what your business needs and your target timeline..."
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 transition-all resize-none"
+                ></textarea>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="grid sm:grid-cols-2 gap-3 pt-2">
+                <button
+                  type="submit"
+                  className="py-3.5 px-4 rounded-xl bg-gradient-to-r from-violet-600 via-fuchsia-600 to-amber-500 hover:opacity-95 text-white font-bold text-xs sm:text-sm shadow-md shadow-violet-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                >
+                  <span>Send Message</span>
+                  <span>→</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleSendViaWhatsApp}
+                  className="py-3.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                >
+                  <span>Send via WhatsApp</span>
+                </button>
+              </div>
+
+              <p className="text-[11px] text-center text-slate-400">
+                🔒 Direct replies sent back to your WhatsApp or email within 24 hours.
               </p>
             </form>
           </motion.div>
+
         </div>
+
       </div>
     </section>
-  );
-}
-
-function FormField({ label, type, placeholder, value, onChange }: {
-  label: string;
-  type: 'text' | 'email' | 'textarea';
-  placeholder: string;
-  value: string;
-  onChange: (value: string) => void;
-}) {
-  const baseClasses = "w-full bg-gray-50 dark:bg-white/[0.03] border border-gray-200 dark:border-white/[0.08] rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/20 focus:outline-none focus:border-violet-500/50 focus:bg-white dark:focus:bg-white/[0.05] transition-all";
-
-  return (
-    <div>
-      <label className="block text-[10px] sm:text-xs text-gray-500 dark:text-white/40 mb-1.5 sm:mb-2 uppercase tracking-wider">{label}</label>
-      {type === 'textarea' ? (
-        <textarea
-          rows={3}
-          placeholder={placeholder}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className={`${baseClasses} resize-none`}
-        />
-      ) : (
-        <input
-          type={type}
-          placeholder={placeholder}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className={baseClasses}
-        />
-      )}
-    </div>
   );
 }
